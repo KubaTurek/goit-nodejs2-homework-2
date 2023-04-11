@@ -1,14 +1,14 @@
 const fs = require("fs/promises");
-const Joi = require("joi"); 
+const Joi = require("joi");
 
 const contactSchema = Joi.object({
-  name: Joi.string().required,
-  email: Joi.string().required,
-  phone: Joi.number().required
-})
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.number().required(),
+});
 
 const listContacts = async () => {
-  const data = await fs.readFile("./contacts.json", "utf-8");
+  const data = await fs.readFile("./models/contacts.json", "utf-8");
   const contacts = JSON.parse(data);
   return contacts;
 };
@@ -24,14 +24,18 @@ const removeContact = async (contactId) => {
   const filteredContacts = contacts.filter(
     (contact) => contact.id !== contactId
   );
-  await fs.writeFile("./contacts.json", JSON.stringify(filteredContacts));
+  await fs.writeFile(
+    "./models/contacts.json",
+    JSON.stringify(filteredContacts)
+  );
 };
 
 const addContact = async (body) => {
   const contacts = await listContacts();
-  const newContact = { id: `${contacts.length + 1}, ...body` };
+  const nextId = Number(contacts.length + 1);
+  const newContact = { ...body, id: nextId.toString() };
   contacts.push(newContact);
-  await fs.writeFile("./contacts.json", JSON.stringify(contacts));
+  await fs.writeFile("./models/contacts.json", JSON.stringify(contacts));
 };
 
 const updateContact = async (contactId, body) => {
@@ -41,7 +45,7 @@ const updateContact = async (contactId, body) => {
     return;
   }
   contacts[indexToFind] = { id: contactId, ...body };
-  await fs.writeFile(".contacts.json", JSON.stringify(contacts));
+  await fs.writeFile("./models/contacts.json", JSON.stringify(contacts));
   return contacts[indexToFind];
 };
 
@@ -51,5 +55,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
-  contactSchema
+  contactSchema,
 };
