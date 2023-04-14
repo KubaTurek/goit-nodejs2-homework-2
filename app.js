@@ -1,9 +1,11 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-
+const { connectToMongo } = require("./startup/database.js");
 const contactsRouter = require("./routes/api/contacts.js");
-
+connectToMongo();
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
