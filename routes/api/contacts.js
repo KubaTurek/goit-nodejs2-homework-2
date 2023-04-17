@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { contactValidationSchema } = require("./../../models/contactsModels");
+const {
+  contactValidationSchema,
+} = require("./../../controllers/contactsController");
+const auth = require("./../../auth/auth");
 
 const {
   listContacts,
@@ -9,9 +12,9 @@ const {
   addContact,
   updateContact,
   updateStatusContact,
-} = require("./../../models/contactsModels");
+} = require("./../../controllers/contactsController");
 
-router.get("/", async (req, res, next) => {
+router.get("/", auth, async (req, res, next) => {
   try {
     const contacts = await listContacts();
     res.json(contacts);
@@ -21,7 +24,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:contactId", async (req, res, next) => {
+router.get("/:contactId", auth, async (req, res, next) => {
   try {
     const { contactId } = req.params;
 
@@ -35,7 +38,7 @@ router.get("/:contactId", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", auth, async (req, res, next) => {
   const { error } = contactValidationSchema.validate(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -49,7 +52,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.delete("/:contactId", async (req, res, next) => {
+router.delete("/:contactId", auth, async (req, res, next) => {
   const { contactId } = req.params;
   try {
     await removeContact(contactId);
@@ -61,7 +64,7 @@ router.delete("/:contactId", async (req, res, next) => {
   }
 });
 
-router.put("/:contactId", async (req, res) => {
+router.put("/:contactId", auth, async (req, res) => {
   const { contactId } = req.params;
   if (!contactId) {
     return res.status(400).send("Id required to change the contact");
@@ -82,7 +85,7 @@ router.put("/:contactId", async (req, res) => {
   }
 });
 
-router.patch("/:contactId/favorite", async (req, res) => {
+router.patch("/:contactId/favorite", auth, async (req, res) => {
   const { contactId } = req.params;
   if (!contactId) {
     return res.status(400).send("Id required to change the contact");

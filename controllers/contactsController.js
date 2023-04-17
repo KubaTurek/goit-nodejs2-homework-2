@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { Contact } = require("./contact");
+const { Contact } = require("../models/contact");
 
 const contactValidationSchema = Joi.object({
   name: Joi.string().required(),
@@ -19,7 +19,7 @@ const getContactById = async (_id) => {
 
 const removeContact = async (_id) => {
   const contact = await Contact.findByIdAndDelete({ _id });
-  return contact
+  return contact;
 };
 
 const addContact = async (name, email, phone) => {
@@ -35,8 +35,8 @@ const updateContact = async (contactId, newContact) => {
 
 const updateStatusContact = async (contactId, body) => {
   await Contact.findByIdAndUpdate(contactId, body);
-  return await getContactById(contactId)
-}
+  return await getContactById(contactId);
+};
 
 module.exports = {
   listContacts,
