@@ -86,7 +86,7 @@ router.patch(
       await image.autocrop().cover(250, 250).quality(60).writeAsync(fileName);
       await fs.rename(
         fileName,
-        path.join(process.cwd(), "public/avatars, originalname")
+        path.join(process.cwd(), "public/avatars", originalname)
       );
       const avatarURL = path.join(
         process.cwd(),
@@ -94,7 +94,6 @@ router.patch(
         originalname
       );
       const user = await updateAvatar(email, avatarURL);
-
       return res.status(200).json(user);
     } catch (error) {
       next(error);
