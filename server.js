@@ -1,5 +1,5 @@
 const app = require("./app");
-const createFolder = require("./helpers/helper")
+const createFolder = require("./helpers/helper");
 
 app.listen(3000, () => {
   createFolder("./tmp");
